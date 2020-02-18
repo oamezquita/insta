@@ -18,10 +18,13 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
-Route::get('/profile/{user}', 'ProfilesController@index')->name('profile.show');
+Route::get('/profile/{user}', 'ProfilesController@index')->name('profile.index');
 Route::get('/profile/{user}/edit', 'ProfilesController@edit')->name('profile.edit');
 Route::patch('/profile/{user}/edit', 'ProfilesController@update')->name('profile.update');
 //Posts
+Route::get('/', 'PostsController@index')->name('post.index');
 Route::get('/p/create', 'PostsController@create')->name('posts.create');
 Route::get('/p/{post}', 'PostsController@show')->name('posts.show');
 Route::post('/p', 'PostsController@store')->name('posts.store');
+//Follows
+Route::post('/follow/{user}', 'FollowsController@store')->name('follow.store');

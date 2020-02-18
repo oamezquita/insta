@@ -10,11 +10,11 @@ class ProfilesController extends Controller
 
 {
     function index(User $user){
+        $follows=(auth()->user()) ? auth()->user()->following->contains($user->id) : false;
         
-        return view('profiles.index',compact('user'));
+        return view('profiles.index',compact('user','follows'));
     }
-    public function edit(User $user)
-    {
+    public function edit(User $user){
         $this->authorize('update',$user->profile);
         return view('profiles.edit',compact('user'));
     }
@@ -29,13 +29,13 @@ class ProfilesController extends Controller
                 'image'=>['image']
             ]
             );
+            
             if(request('image')){
                 $image_path=request('image')->store('profile','public');
-                $image=Image::make(public_path("storage/{$image_path}"))->fit(1000,1000);
-                $image->save();       
+                $image=Image::make(public_path("storage/{$image_path}"))->fit(250,250);
+                $image->save();
             }
-            array_merge($data,['image'=>$image_path]);
-            auth()->user()->profile->update($data);
+            auth()->user()->profile->update(array_merge($data,['image'=>$image_path]));
             return redirect(route('profile.show',$user->id));
     }
     
